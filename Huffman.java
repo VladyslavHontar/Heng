@@ -70,12 +70,11 @@ public class Huffman {
     String[] chunks = text.split("(?<=\\G.{" + 10 + "})");
     int i = 0;
     for (char ch : chunks[i].toCharArray()) {
-      charFreqs[ch][i]++;
-      i++;
+      charFreqs[ch][ch]++;
     }
 
     // Build the Huffman tree
-    for (int n = 0; n < charFreqs.length; n++) {
+    for (int n = 0; n < i; n++) {
       Node root = buildTree(charFreqs[n]);
 
       // Generate the Huffman codes
