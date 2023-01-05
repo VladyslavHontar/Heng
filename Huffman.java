@@ -1,8 +1,10 @@
 import java.util.*;
 
 public class Huffman {
+
   // Inner class to represent a node in the Huffman tree
   static class Node implements Comparable<Node> {
+
     char ch;
     int freq;
     Node left;
@@ -27,7 +29,7 @@ public class Huffman {
     // Create leaf nodes for each character and add them to the priority queue
     for (int i = 0; i < charFreqs.length; i++) {
       if (charFreqs[i] > 0) {
-        queue.add(new Node((char)i, charFreqs[i], null, null));
+        queue.add(new Node((char) i, charFreqs[i], null, null));
       }
     }
     // Continuously merge the lowest frequency nodes until there is only one node left (the root of the tree)
@@ -63,34 +65,42 @@ public class Huffman {
     Scanner scanner = new Scanner(System.in);
     System.out.print("Enter the text to compress: ");
     String text = scanner.nextLine();
-
     // Calculate the frequency of each character in the text
-    int[] charFreqs = new int[256];
-    for (char ch : text.toCharArray()) {
-      charFreqs[ch]++;
+    int[][] charFreqs = new int[256][256];
+    String[] chunks = text.split("(?<=\\G.{" + 10 + "})");
+    int i = 0;
+    for (char ch : chunks[i].toCharArray()) {
+      charFreqs[ch][i]++;
+      i++;
     }
 
     // Build the Huffman tree
-    Node root = buildTree(charFreqs);
+    for (int n = 0; n < charFreqs.length; n++) {
+      Node root = buildTree(charFreqs[n]);
 
-    // Generate the Huffman codes
-    Map<Character, String> codes = getCodes(root);
+      // Generate the Huffman codes
+      Map<Character, String> codes = getCodes(root);
 
-    // Encode the text using the Huffman codes
-    StringBuilder encoded = new StringBuilder();
-    for (char ch : text.toCharArray())
-    {
-      encoded.append(codes.get(ch));
-    }
+      // Encode the text using the Huffman codes
+      StringBuilder encoded = new StringBuilder();
+      int j = 0;
+      for (char ch : chunks[j].toCharArray()) {
+        encoded.append(codes.get(ch));
+        j++;
+      }
 
 // Calculate the number of bits without compression
-    int originalBits = text.length() * 8;
+      int originalBits = text.length() * 8;
 
 // Calculate the number of bits with compression
-    int compressedBits = encoded.length();
+      int compressedBits = encoded.length();
 
-    System.out.println("Number of bits without compression: " + originalBits);
-    System.out.println("Number of bits with compression: " + compressedBits);
+      System.out.println();
+      System.out.println("Number of bits without compression: " + originalBits);
+      System.out.println("Number of bits with compression: " + compressedBits);
+      System.out.println();
+      System.out.println(encoded);
+    }
   }
 }
 
