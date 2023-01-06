@@ -65,40 +65,39 @@ public class Huffman {
     Scanner scanner = new Scanner(System.in);
     System.out.print("Enter the text to compress: ");
     String text = scanner.nextLine();
-    // Calculate the frequency of each character in the text
-    int[][] charFreqs = new int[256][256];
+    // Divide text string to different parts
     String[] chunks = text.split("(?<=\\G.{" + 10 + "})");
-    int i = 0;
-    for (char ch : chunks[i].toCharArray()) {
-      charFreqs[ch][ch]++;
+
+    // Calculate the frequency of each character in the text
+    int[] charFreqs = new int[256];
+    for (char ch : text.toCharArray()) {
+      charFreqs[ch]++;
     }
 
     // Build the Huffman tree
-    for (int n = 0; n < i; n++) {
-      Node root = buildTree(charFreqs[n]);
+    Node root = buildTree(charFreqs);
 
-      // Generate the Huffman codes
-      Map<Character, String> codes = getCodes(root);
+    // Generate the Huffman codes
+    Map<Character, String> codes = getCodes(root);
 
-      // Encode the text using the Huffman codes
-      StringBuilder encoded = new StringBuilder();
-      int j = 0;
-      for (char ch : chunks[j].toCharArray()) {
-        encoded.append(codes.get(ch));
-        j++;
-      }
+    // Encode the text using the Huffman codes
+    StringBuilder encoded = new StringBuilder();
+    for (char ch : text.toCharArray())
+    {
+      encoded.append(codes.get(ch));
+    }
 
-// Calculate the number of bits without compression
-      int originalBits = text.length() * 8;
+    // Calculate the number of bits without compression
+    int originalBits = text.length() * 8;
 
-// Calculate the number of bits with compression
-      int compressedBits = encoded.length();
+    // Calculate the number of bits with compression
+    int compressedBits = encoded.length();
 
-      System.out.println();
-      System.out.println("Number of bits without compression: " + originalBits);
-      System.out.println("Number of bits with compression: " + compressedBits);
-      System.out.println();
-      System.out.println(encoded);
+    System.out.println("Number of bits without compression: " + originalBits);
+    System.out.println("Number of bits with compression: " + compressedBits);
+    System.out.println(encoded);
+    for (int i = 0; i <= text.length() / 10; i++) {
+      System.out.println(chunks[i]);
     }
   }
 }
