@@ -69,30 +69,33 @@ public class Huffman {
     String[] chunks = text.split("(?<=\\G.{" + 10 + "})");
 
     // Calculate the frequency of each character in the text
-    int[] charFreqs = new int[256];
-    for (char ch : text.toCharArray()) {
-      charFreqs[ch]++;
+    int[][] charFreqs = new int[256][256];
+    for (int i = 0; i <= text.length() / 10; i++) {
+      for (char ch : chunks[i].toCharArray()) {
+        charFreqs[i][ch]++;
+      }
     }
-
-    // Build the Huffman tree
-    Node root = buildTree(charFreqs);
-
-    // Generate the Huffman codes
-    Map<Character, String> codes = getCodes(root);
-
-    // Encode the text using the Huffman codes
+    int originalBits = 0;
+    int compressedBits = 0;
     StringBuilder encoded = new StringBuilder();
-    for (char ch : text.toCharArray())
-    {
-      encoded.append(codes.get(ch));
+    // Build the Huffman tree
+    for (int i = 0; i <= text.length() / 10; i++) {
+      Node root = buildTree(charFreqs[i]);
+
+      // Generate the Huffman codes
+      Map<Character, String> codes = getCodes(root);
+
+      // Encode the text using the Huffman codes
+      for (char ch : chunks[i].toCharArray()) {
+        encoded.append(codes.get(ch));
+      }
+
+      // Calculate the number of bits without compression
+      originalBits = text.length() * 8;
+
+      // Calculate the number of bits with compression
+      compressedBits = encoded.length();
     }
-
-    // Calculate the number of bits without compression
-    int originalBits = text.length() * 8;
-
-    // Calculate the number of bits with compression
-    int compressedBits = encoded.length();
-
     System.out.println("Number of bits without compression: " + originalBits);
     System.out.println("Number of bits with compression: " + compressedBits);
     System.out.println(encoded);
